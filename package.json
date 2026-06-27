@@ -1,0 +1,12 @@
+{
+  "name": "pulso-latino-generador",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generador de noticias Pulso Latino",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

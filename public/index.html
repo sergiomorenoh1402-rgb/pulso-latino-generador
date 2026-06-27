@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NoticiasCuba — Generador</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" id="brandLogo"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,13 9,13 11,6 15,19 17,13 22,13"/></svg></span>
+    <div>
+      <strong id="brandName">Pulso Latino</strong>
+      <small>generador de posts para Facebook</small>
+    </div>
+  </div>
+  <div class="cats">
+    <button data-cat="cuba" class="cat active">Cuba</button>
+    <button data-cat="migracion" class="cat">Migración</button>
+    <button data-cat="latinos" class="cat">Latinos/USA</button>
+    <button data-cat="farandula" class="cat">Farándula</button>
+    <button data-cat="sucesos" class="cat">Sucesos</button>
+    <button data-cat="economia" class="cat">Economía</button>
+    <button data-cat="deportes" class="cat">Deportes</button>
+    <button data-cat="mundo" class="cat">Mundo</button>
+  </div>
+</header>
+
+<main class="grid">
+  <!-- Columna 1: feed -->
+  <section class="col feed">
+    <div class="col-head">
+      <h2>Titulares</h2>
+      <button id="refresh" class="ghost" title="Recargar">↻</button>
+    </div>
+    <select id="srcFilter" class="src-filter"><option value="">Todas las fuentes</option></select>
+    <div id="feedList" class="feed-list"><p class="muted">Cargando titulares…</p></div>
+  </section>
+
+  <!-- Columna 2: editor -->
+  <section class="col editor">
+    <div class="col-head"><h2>Editar</h2></div>
+    <div id="newsMeta" class="news-meta"></div>
+    <label>Titular (sale en la imagen)</label>
+    <textarea id="headline" rows="3" placeholder="Pega o escribe el titular…"></textarea>
+    <div class="row">
+      <button id="aiBtn" class="primary">✨ Reescribir con IA</button>
+      <span id="aiState" class="muted"></span>
+    </div>
+
+    <label>Etiqueta / categoría</label>
+    <input id="tag" type="text" value="ÚLTIMA HORA">
+
+    <label>Imagen de fondo</label>
+    <div class="row">
+      <button id="useOg" class="ghost">📰 Traer foto de la noticia</button>
+      <label class="filebtn">📁 Subir foto<input id="file" type="file" accept="image/*" hidden></label>
+    </div>
+    <small class="muted" id="imgState">Sin imagen — se usa fondo de color.</small>
+
+    <label>Caption para Facebook</label>
+    <textarea id="caption" rows="4" placeholder="El texto del post…"></textarea>
+    <div class="row">
+      <button id="copyCap" class="ghost">📋 Copiar caption</button>
+    </div>
+
+    <label>Cuerpo de la noticia (para la web)</label>
+    <div class="row">
+      <button id="genBody" class="primary">✨ Generar cuerpo (IA)</button>
+      <span id="bodyState" class="muted"></span>
+    </div>
+    <textarea id="body" rows="6" placeholder="Clic en 'Generar cuerpo' o escribe tú los párrafos…"></textarea>
+    <div class="row">
+      <button id="publishBtn" class="primary">🌐 Publicar en la web</button>
+      <span id="pubState" class="muted"></span>
+    </div>
+
+    <details class="branding">
+      <summary>Personalizar marca</summary>
+      <label>Nombre de la página</label>
+      <input id="setName" type="text" value="Pulso Latino">
+      <label>Logo</label>
+      <select id="setLogo">
+        <option value="pulse">Ícono de latido ❤︎</option>
+        <option value="PL">Iniciales "PL"</option>
+      </select>
+      <label>Color de marca</label>
+      <input id="setColor" type="color" value="#e11d2a">
+      <label>Formato</label>
+      <select id="setRatio">
+        <option value="1080x1080">Cuadrado 1:1 (1080×1080)</option>
+        <option value="1080x1350">Vertical 4:5 (1080×1350)</option>
+        <option value="1200x630">Horizontal (1200×630)</option>
+      </select>
+    </details>
+  </section>
+
+  <!-- Columna 3: preview -->
+  <section class="col preview">
+    <div class="col-head"><h2>Vista previa</h2></div>
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="1080" height="1080"></canvas>
+    </div>
+    <button id="download" class="primary big">⬇ Descargar imagen PNG</button>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
