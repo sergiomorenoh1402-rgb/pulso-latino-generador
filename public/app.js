@@ -280,12 +280,13 @@ async function publish() {
     const j = await r.json();
     if (j.ok) {
       const url = 'https://pulso-latino.netlify.app/n/' + j.slug + '.html';
-      $('pubState').innerHTML = `✓ Publicada · enlace para Facebook:<br>` +
-        `<input id="pubLink" type="text" readonly value="${url}" style="width:78%">` +
-        ` <button type="button" id="copyLink" class="ghost">📋 Copiar</button>` +
-        `<br><small class="muted">Pega este enlace en el primer comentario del post. Tarda ~1 min en estar online.</small>`;
-      const cp = document.getElementById('copyLink');
-      if (cp) cp.onclick = () => { const f = document.getElementById('pubLink'); f.select(); navigator.clipboard.writeText(url); cp.textContent = '✓ Copiado'; setTimeout(() => cp.textContent = '📋 Copiar', 1500); };
+      const comment = `${title}\n\n👉 Más información aquí:\n${url}`;
+      $('pubState').innerHTML = `✓ Publicada · comentario listo para Facebook:` +
+        `<textarea id="pubComment" readonly rows="4" style="width:100%;margin-top:6px">${escapeHtml(comment)}</textarea>` +
+        `<button type="button" id="copyComment" class="primary">📋 Copiar comentario</button>` +
+        ` <small class="muted">Pégalo en el primer comentario del post (~1 min en estar online).</small>`;
+      const cc = document.getElementById('copyComment');
+      if (cc) cc.onclick = () => { const f = document.getElementById('pubComment'); f.select(); navigator.clipboard.writeText(comment); cc.textContent = '✓ Copiado'; setTimeout(() => cc.textContent = '📋 Copiar comentario', 1500); };
     } else $('pubState').textContent = 'Error al publicar';
   } catch { $('pubState').textContent = 'Error (¿servidor corriendo?)'; }
 }
