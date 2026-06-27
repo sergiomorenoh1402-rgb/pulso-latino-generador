@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: pulso-latino-generador
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GH_OWNER
+        value: sergiomorenoh1402-rgb
+      - key: GH_REPO
+        value: pulso-latino-web
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GEN_PASS
+        sync: false
