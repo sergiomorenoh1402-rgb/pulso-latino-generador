@@ -279,8 +279,13 @@ async function publish() {
     });
     const j = await r.json();
     if (j.ok) {
-      const online = j.deployed ? ' · 🌍 subiendo online…' : ' · (local)';
-      $('pubState').innerHTML = `✓ Publicada (${j.count})${online} · <a href="/web/n/${j.slug}.html" target="_blank" style="color:var(--brand)">ver</a>`;
+      const url = 'https://pulso-latino.netlify.app/n/' + j.slug + '.html';
+      $('pubState').innerHTML = `✓ Publicada · enlace para Facebook:<br>` +
+        `<input id="pubLink" type="text" readonly value="${url}" style="width:78%">` +
+        ` <button type="button" id="copyLink" class="ghost">📋 Copiar</button>` +
+        `<br><small class="muted">Pega este enlace en el primer comentario del post. Tarda ~1 min en estar online.</small>`;
+      const cp = document.getElementById('copyLink');
+      if (cp) cp.onclick = () => { const f = document.getElementById('pubLink'); f.select(); navigator.clipboard.writeText(url); cp.textContent = '✓ Copiado'; setTimeout(() => cp.textContent = '📋 Copiar', 1500); };
     } else $('pubState').textContent = 'Error al publicar';
   } catch { $('pubState').textContent = 'Error (¿servidor corriendo?)'; }
 }
