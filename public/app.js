@@ -281,14 +281,43 @@ async function publish() {
     if (j.ok) {
       const url = 'https://pulso-latino.netlify.app/n/' + j.slug + '.html';
       const comment = `${title}\n\n👉 Más información aquí:\n${url}`;
-      $('pubState').innerHTML = `✓ Publicada · comentario listo para Facebook:` +
+      $('pubState').innerHTML =
+        `<div id="pubMsg">⏳ Publicada. Netlify está construyendo la página… <b id="pubTimer">0s</b><br>` +
+        `<small class="muted">No toques "Ver" todavía; se activa solo cuando esté lista.</small></div>` +
         `<textarea id="pubComment" readonly rows="4" style="width:100%;margin-top:6px">${escapeHtml(comment)}</textarea>` +
-        `<button type="button" id="copyComment" class="primary">📋 Copiar comentario</button>` +
-        ` <small class="muted">Pégalo en el primer comentario del post (~1 min en estar online).</small>`;
+        `<button type="button" id="copyComment" class="primary">📋 Copiar comentario</button> ` +
+        `<a id="verBtn" class="primary" style="pointer-events:none;opacity:.5;text-decoration:none" href="${url}" target="_blank" rel="noopener">⏳ Preparando…</a>`;
       const cc = document.getElementById('copyComment');
       if (cc) cc.onclick = () => { const f = document.getElementById('pubComment'); f.select(); navigator.clipboard.writeText(comment); cc.textContent = '✓ Copiado'; setTimeout(() => cc.textContent = '📋 Copiar comentario', 1500); };
+      waitOnline(url); // espera a que la página exista de verdad y recién ahí activa "Ver"
     } else $('pubState').textContent = 'Error al publicar';
   } catch { $('pubState').textContent = 'Error (¿servidor corriendo?)'; }
+}
+
+// Sondea la URL hasta que Netlify termine de construir la página; recién ahí activa el botón "Ver".
+function waitOnline(url) {
+  const start = Date.now();
+  const ver = document.getElementById('verBtn');
+  const msg = document.getElementById('pubMsg');
+  const timer = document.getElementById('pubTimer');
+  const enable = (txt) => { if (ver) { ver.style.pointerEvents = ''; ver.style.opacity = ''; ver.textContent = txt; } };
+  const tick = setInterval(() => { if (timer) timer.textContent = Math.round((Date.now() - start) / 1000) + 's'; }, 1000);
+  const poll = async () => {
+    let live = false;
+    try { live = (await (await fetch('/api/check?url=' + encodeURIComponent(url))).json()).live; } catch {}
+    if (live) {
+      clearInterval(tick);
+      if (msg) msg.innerHTML = '✅ ¡Ya está online! Ya puedes abrirla y pegar el comentario en Facebook.';
+      return enable('🌐 Ver noticia');
+    }
+    if (Date.now() - start > 240000) { // tras 4 min, deja entrar igual por si acaso
+      clearInterval(tick);
+      if (msg) msg.innerHTML = '⚠️ Está tardando más de lo normal. Prueba "Ver"; si no carga, espera un momento y recarga.';
+      return enable('🌐 Ver noticia');
+    }
+    setTimeout(poll, 4000);
+  };
+  setTimeout(poll, 4000);
 }
 
 // ---------- UTILS ----------

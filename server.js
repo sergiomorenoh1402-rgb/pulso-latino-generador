@@ -357,6 +357,15 @@ const server = http.createServer(async (req, res) => {
       const img = await fetchOgImage(u.searchParams.get('url') || '');
       return send(res, 200, JSON.stringify({ image: img }));
     }
+    if (u.pathname === '/api/check') {
+      // ¿ya está online la página recién publicada? (Netlify tarda ~1-2 min en reconstruir)
+      const target = u.searchParams.get('url') || '';
+      try {
+        const bust = target + (target.includes('?') ? '&' : '?') + '_=' + Date.now(); // saltar caché del CDN
+        const r = await fetch(bust, { method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0', 'Cache-Control': 'no-cache' } });
+        return send(res, 200, JSON.stringify({ live: r.ok }));
+      } catch { return send(res, 200, JSON.stringify({ live: false })); }
+    }
     if (u.pathname === '/api/rewrite') {
       const t = u.searchParams.get('t') || '';
       return send(res, 200, JSON.stringify(await rewrite(t)));
