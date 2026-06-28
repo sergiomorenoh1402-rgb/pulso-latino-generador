@@ -279,7 +279,7 @@ async function publish() {
     });
     const j = await r.json();
     if (j.ok) {
-      const url = 'https://pulso-latino.netlify.app/n/' + j.slug + '.html';
+      const url = 'https://pulso-latino-web.onrender.com/n/' + j.slug + '.html';
       const comment = `${title}\n\n👉 Más información aquí:\n${url}`;
       $('pubState').innerHTML =
         `<div id="pubMsg">⏳ Publicada. Netlify está construyendo la página… <b id="pubTimer">0s</b><br>` +
